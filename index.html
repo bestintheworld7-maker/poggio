@@ -332,12 +332,44 @@ ul { list-style: none; }
 }
 .gin-num { font-weight: 700; color: var(--orange); font-size: 0.75rem; min-width: 22px; padding-top: 1px; }
 .gin-info { flex: 1; }
-.gin-name { font-weight: 600; font-size: 0.85rem; color: var(--g2); }
-.gin-profile { font-size: 0.75rem; color: var(--text3); margin-top: 1px; font-style: italic; }
+.gin-name { font-weight: 600; font-size: 0.85rem; color: var(--g2); display: block; }
+.gin-profile { font-size: 0.75rem; color: var(--text3); margin-top: 3px; font-style: italic; display: block; }
 .gin-price { font-weight: 700; color: var(--g2); font-size: 0.85rem; white-space: nowrap; }
 
 /* ===== NOTE ===== */
 .section-note { font-size: 0.76rem; color: var(--text3); margin-bottom: 0.75rem; font-style: italic; background: var(--cream2); padding: 6px 10px; border-radius: 6px; }
+
+/* ===== LANG SWITCHER ===== */
+.lang-switcher-wrap {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 0.9rem;
+}
+.lang-switcher {
+  display: inline-flex;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  padding: 3px;
+  gap: 2px;
+}
+.lang-btn {
+  padding: 5px 16px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.65);
+  transition: all 220ms cubic-bezier(0.16,1,0.3,1);
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+.lang-btn.active {
+  background: var(--g3);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(74,124,47,0.5);
+}
 
 /* ===== SCROLL TOP ===== */
 .scroll-top {
@@ -396,17 +428,18 @@ ul { list-style: none; }
     <span class="hero-chip">🍸 Mixology</span>
   </div>
 
+  <div class="lang-switcher-wrap">
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="it" onclick="switchLang('it')">🇮🇹 ITA</button>
+      <button class="lang-btn" data-lang="en" onclick="switchLang('en')">🇬🇧 ENG</button>
+    </div>
+  </div>
+
   <div class="meal-switcher-wrap">
     <div class="meal-switcher">
-      <button class="meal-btn active" data-meal="pranzo" onclick="switchMeal('pranzo')">
-        <span class="meal-icon">☀️</span>Pranzo
-      </button>
-      <button class="meal-btn" data-meal="cena" onclick="switchMeal('cena')">
-        <span class="meal-icon">🌙</span>Cena
-      </button>
-      <button class="meal-btn" data-meal="bevande" onclick="switchMeal('bevande')">
-        <span class="meal-icon">🍸</span>Bevande
-      </button>
+      <button class="meal-btn active" data-meal="pranzo" onclick="switchMeal('pranzo')">Pranzo</button>
+      <button class="meal-btn" data-meal="cena" onclick="switchMeal('cena')">Cena</button>
+      <button class="meal-btn" data-meal="bevande" onclick="switchMeal('bevande')">Bevande</button>
     </div>
   </div>
 </div>
@@ -929,7 +962,14 @@ ul { list-style: none; }
           <div class="gin-item"><span class="gin-num">19</span><div class="gin-info"><span class="gin-name">Arigatuono</span><span class="gin-profile">Stile giapponese — elegante, pulito, agrumato, speziato</span></div><span class="gin-price">12€</span></div>
           <div class="gin-item"><span class="gin-num">20</span><div class="gin-info"><span class="gin-name">Frantuono</span><span class="gin-profile">Morbido, delicato, mediterraneo — sentori di oliva</span></div><span class="gin-price">12€</span></div>
         </div>
-        <p class="section-note" style="margin-top: 0.85rem;">Abbiamo molti altri gin in costante aggiornamento — chiedi al Gingegnere! 10€</p>
+        <div class="gin-item gin-extra" style="margin-top:0.85rem; background: linear-gradient(135deg, var(--g1) 0%, var(--g2) 100%); border-color: var(--g3);">
+          <span class="gin-num" style="color:var(--orange2);">+</span>
+          <div class="gin-info">
+            <span class="gin-name" style="color:#fff;">Selezione del Gingegnere</span>
+            <span class="gin-profile" style="color:rgba(255,255,255,0.75);">Tanti altri gin in costante aggiornamento — chiedi e scegli quello che fa per te!</span>
+          </div>
+          <span class="gin-price" style="color:var(--orange2);">10€</span>
+        </div>
       </div>
     </div>
   </section>
@@ -1186,7 +1226,270 @@ window.addEventListener('scroll', () => {
   scrollBtn.classList.toggle('visible', window.scrollY > 400);
 }, { passive: true });
 
-// ===== AUTO-HIGHLIGHT =====
+// ===== LANGUAGE SWITCH =====
+const translations = {
+  // Meal switcher
+  'meal-pranzo': { it: 'Pranzo', en: 'Lunch' },
+  'meal-cena': { it: 'Cena', en: 'Dinner' },
+  'meal-bevande': { it: 'Bevande', en: 'Drinks' },
+
+  // Nav tabs
+  'nav-ll-condividi': { it: 'Condividi', en: 'To Share' },
+  'nav-ll-primi': { it: 'Primi', en: 'First Courses' },
+  'nav-ll-insalatone': { it: 'Insalatone', en: 'Big Salads' },
+  'nav-ll-griglia': { it: 'Griglia', en: 'Grill' },
+  'nav-ll-contorni': { it: 'Contorni', en: 'Sides' },
+  'nav-ll-dolci': { it: 'Dolci', en: 'Desserts' },
+  'nav-condividi': { it: 'Condividi', en: 'To Share' },
+  'nav-hamburger': { it: 'Hamburger', en: 'Burgers' },
+  'nav-pinse': { it: 'Pinse', en: 'Pinse' },
+  'nav-griglia': { it: 'Griglia', en: 'Grill' },
+  'nav-contorni': { it: 'Contorni', en: 'Sides' },
+  'nav-dolci': { it: 'Dolci', en: 'Desserts' },
+  'nav-caffe': { it: 'Caffè', en: 'Coffee' },
+  'nav-cocktail': { it: 'Cocktail', en: 'Cocktails' },
+  'nav-gin': { it: 'Gin Tonic', en: 'Gin Tonic' },
+  'nav-vini': { it: 'Vini', en: 'Wines' },
+  'nav-birre': { it: 'Birre', en: 'Beers' },
+};
+
+// Per-element translations keyed by [section-id]:[dish-name-it]
+const dishTranslations = {
+  // LL Condividi
+  'Carpaccio del Bosco': { en: 'Carpaccio del Bosco', desc_en: 'Juniper-infused beef carpaccio with Tuscan herbs, seasoned ricotta, caper berries, and a mustard-apple sauce' },
+  'Degustazione di Battute al Coltello': { en: 'Degustazione di Battute al Coltello', desc_en: 'Hand-minced beef tartare served two ways: with black garlic mayonnaise and crispy onion, and with burrata and black truffle' },
+  'Pimp My Caprese': { en: 'Pimp My Caprese', desc_en: 'Buffalo mozzarella caprese with yellow and red cherry tomatoes, basil chips, and basil pesto' },
+  'Melanzana alla Issi': { en: 'Melanzana alla Issi', desc_en: 'Eggplant "parmigiana" boat with smoked provola cheese and green pesto' },
+  'Burro e Acciughe 2.0': { en: 'Burro e Acciughe 2.0', desc_en: 'Crispy brioche bread golden-browned in butter, topped with anchovies and a citrus sauce' },
+  'Gran Tagliere del Poggio': { en: 'Gran Tagliere del Poggio', desc_en: 'A selection of local cold cuts and pecorino cheeses with fruit preserves, appetizers and local specialties' },
+  // LL Primi
+  'Pici al Ragù Toscano': { en: 'Pici al Ragù Toscano', desc_en: 'Traditional hand-rolled Pici pasta with a classic Tuscan meat ragù' },
+  'Gnocchi di Patate al Pesto Rosso': { en: 'Gnocchi di Patate al Pesto Rosso', desc_en: 'Potato gnocchi served with red pesto (sun-dried tomato and nut-based)' },
+  'Pappardelle al Cinghiale e Cioccolato': { en: 'Pappardelle al Cinghiale e Cioccolato', desc_en: 'Wide pasta with wild boar ragù and a touch of dark chocolate — a traditional Tuscan twist' },
+  'Spaghettone al Pomodoro Fresco e Origano': { en: 'Spaghettone al Pomodoro Fresco e Origano', desc_en: 'Thick-cut spaghetti with fresh tomato sauce and aromatic oregano' },
+  'Gnudi di Ricotta e Spinaci': { en: 'Gnudi di Ricotta e Spinaci', desc_en: 'Traditional ricotta and spinach "naked" dumplings, served with yellow cherry tomato cream and shaved salted ricotta' },
+  // LL Insalatone
+  'Insalatona del Poggio': { en: 'Insalatona del Poggio', desc_en: 'Purple cabbage, pecorino, walnuts and honey' },
+  'Insalatona di Tonno': { en: 'Insalatona di Tonno', desc_en: 'Tuna, cherry tomatoes and olives' },
+  'Insalatona Greca': { en: 'Insalatona Greca', desc_en: 'Feta, corn, olives and baby mozzarella' },
+  "Insalatona dell'Orto": { en: "Insalatona dell'Orto", desc_en: 'Cherry tomatoes, carrots, cucumbers, olives and croutons' },
+  // LL Griglia
+  'Il Pollaccio': { en: 'Il Pollaccio', desc_en: 'Slow-cooked (CBT) herb-infused young rooster with its own reduction' },
+  'Le Rostinciane': { en: 'Le Rostinciane', desc_en: 'Pork ribs in BBQ sauce' },
+  'La Tagliata R&G': { en: 'La Tagliata R&G', desc_en: 'Sliced beef with arugula and Grana cheese sauce' },
+  'La Tagliata del Poggio': { en: 'La Tagliata del Poggio', desc_en: 'Sliced beef with lard and rosemary' },
+  'La Picanha': { en: 'La Picanha', desc_en: 'Slow-cooked (CBT) beef Picanha with its own reduction' },
+  'Gli Arrosticini': { en: 'Gli Arrosticini', desc_en: 'Traditional mutton skewers served with beer-infused BBQ sauce and tzatziki' },
+  // LL Contorni
+  'Patate arrosto (a spicchi)': { en: 'Roasted Potato Wedges', desc_en: '' },
+  'Patate fritte': { en: 'French Fries', desc_en: '' },
+  'Insalata mista': { en: 'Mixed Green Salad', desc_en: '' },
+  'Spinacino saltato': { en: 'Sautéed Baby Spinach', desc_en: '' },
+  // LL Dolci
+  'Tiramisù del Poggio': { en: 'Tiramisù del Poggio', desc_en: 'Our signature Tiramisù' },
+  'Tortino Pere e Cannella': { en: 'Pear and Cinnamon Cake', desc_en: 'Served with salted caramel sauce' },
+  'Latte in Piedi': { en: 'Latte in Piedi (Italian Custard Pudding)', desc_en: 'Traditional creamy vanilla custard' },
+  'Cremoso al Mango': { en: 'Mango Cremeux', desc_en: 'With almond crunch' },
+  // Cena — Condividi
+  'Coccole, Crudo & Burrata': { en: 'Coccole, Crudo & Burrata', desc_en: 'Traditional fried dough "coccole," aged prosciutto crudo, and creamy burratina cheese' },
+  'Frittino del Poggio': { en: 'Frittino del Poggio', desc_en: 'Fried specialties: zucchini flowers stuffed with ricotta and mint, fried sage, Tuscan bread, pappa al pomodoro, and crispy paprika chicken served with gin and pink peppercorn mayo' },
+  // Hamburger
+  'Polpo Burger': { en: 'Polpo Burger', desc_en: 'Seared octopus, fresh baby spinach, gin and pink peppercorn mayo, and savoy cabbage carpaccio (marinated in soy and lemon)' },
+  'Issi Burger': { en: 'Issi Burger', desc_en: '180g beef patty, smoked provola cheese, caramelized onions, crispy Tuscan bacon (rigatino), beer-infused BBQ sauce, and crunchy greens' },
+  'Chicken Burger': { en: 'Chicken Burger', desc_en: 'Crispy paprika and pink peppercorn chicken, gin and citrus savory zabaglione, purple cabbage, and cherry tomatoes' },
+  'Veggie Burger': { en: 'Veggie Burger', desc_en: 'BBQ vegetarian pulled pork with carrot and ginger sauce, marinated purple cabbage, sun-dried tomatoes, and caramelized onions' },
+  'Tartar Burger': { en: 'Tartar Burger', desc_en: '150g hand-chopped beef tartare, tzatziki sauce, caramelized onions, crunchy lettuce, and sun-dried tomatoes' },
+  // Pinse
+  'La Mortazza 2.0': { en: 'La Mortazza 2.0', desc_en: 'Schiacciata, Mortadella, stracciatella cheese, pistachios, and caramelized onions' },
+  'La Tartara': { en: 'La Tartara', desc_en: 'Schiacciata with beef tartare, fresh cherry tomatoes, stracciatella cheese, red pesto, and crushed hazelnuts' },
+  'La Contadina': { en: 'La Contadina', desc_en: 'Tomato sauce, mozzarella, sausage, ricotta, mint-marinated eggplant, and almonds' },
+  'La Figa & il Manzo': { en: 'La Figa & il Manzo', desc_en: 'Schiacciata with semi-candied figs, beef carpaccio, Pecorino Romano, yellow cherry tomato sauce, and arugula' },
+  'La Scarpetta': { en: 'La Scarpetta', desc_en: 'Mozzarella, Tuscan ragù, smoked provola cheese, and Pecorino Romano' },
+  'La 4 Formaggi Pro': { en: 'La 4 Formaggi Pro', desc_en: 'Mozzarella, gorgonzola, fresh pecorino, Pecorino Romano, ricotta, and caramelized onions' },
+  'La Fresca di Zona': { en: 'La Fresca di Zona', desc_en: 'Tomato sauce, mozzarella, cherry tomatoes, basil pesto, stracciatella cheese, arugula, and Pecorino Romano' },
+  'La Stracciamare': { en: 'La Stracciamare', desc_en: 'Schiacciata with stracciatella cheese, marinated anchovies, cherry tomatoes, and basil' },
+  'La Pacco da Giù': { en: 'La Pacco da Giù', desc_en: "Tomato sauce, mozzarella, spicy 'nduja, crusco crunchy peppers, and smoked provola cheese" },
+  // Griglia (cena)
+  'La Tagliata R&amp;G': { en: 'La Tagliata R&G', desc_en: 'Sliced beef with arugula and Grana cheese sauce' },
+  // Dolci (cena)
+  'Tiramisù del Poggio (cena)': { en: 'Tiramisù del Poggio', desc_en: 'Our signature Tiramisù' },
+  // Cocktail
+  'Sprissi': { en: 'Sprissi', desc_en: 'Martini Bitter Riserva, pink grapefruit Dandy, Lumis sparkling wine' },
+  'Hugo Spritz': { en: 'Hugo Spritz', desc_en: 'St. Germain elderflower liqueur, prosecco, soda, fresh mint' },
+  'Americano': { en: 'Americano', desc_en: 'Martini Bitter Riserva, Martini red Vermouth, soda' },
+  'Negroni': { en: 'Negroni', desc_en: 'Bombay Sapphire Gin, Martini Bitter Riserva, Martini red Vermouth' },
+  'Basil Smash': { en: 'Basil Smash', desc_en: 'Bombay Sapphire Gin, lemon, sugar, fresh basil' },
+  'Paloma': { en: 'Paloma', desc_en: 'Cazadores Tequila, lime, agave syrup, pink grapefruit Dandy, salt rim' },
+  'Margarita': { en: 'Margarita', desc_en: 'Cazadores Tequila, triple sec, lime, agave syrup' },
+  'Mojito': { en: 'Mojito', desc_en: 'Bacardi Carta Blanca, lime, fresh mint, sugar, soda' },
+  'Tropical Daiquiri Frozen': { en: 'Tropical Daiquiri Frozen', desc_en: 'Bacardi Carta Blanca, lime, mango purée and passion fruit' },
+  'Piña Colada': { en: 'Piña Colada', desc_en: 'Bacardi Carta Oro, pineapple, coconut, lime' },
+  'Moscow Mule': { en: 'Moscow Mule', desc_en: 'Eristoff Vodka, lime, Dandy Ginger Beer' },
+  'Whisky Sour': { en: 'Whisky Sour', desc_en: 'Bulleit Rye, lemon, sugar, foamer' },
+  'Fernandito': { en: 'Fernandito', desc_en: 'Fernet Branca, Coca Cola, lime' },
+  'Sua Maestà il Martini': { en: 'Sua Maestà il Martini', desc_en: 'Frantuono olive oil gin, Martini Ambrato Riserva vermouth, olives' },
+  'Negroni Fumé': { en: 'Negroni Fumé', desc_en: 'Maite Fiamma Gin, Mezcal, Martini Bitter Riserva, Martini Rubino Riserva vermouth, smoked rosemary' },
+  'Spicy Paloma': { en: 'Spicy Paloma', desc_en: 'Patron Reposado Tequila, jalapeño liqueur, lime, agave, pink grapefruit Dandy, green tabasco' },
+  'Issi Margarita': { en: 'Issi Margarita', desc_en: 'Patron Reposado Tequila, Mezcal, lime, agave syrup' },
+  'Jungle Bird': { en: 'Jungle Bird', desc_en: 'Jamaican Rum, banana bitter, pineapple, sugar, lime' },
+  'Espresso Mentini': { en: 'Espresso Mentini', desc_en: 'Grey Goose Vodka, espresso, Patron XO coffee liqueur, sugar, fresh mint' },
+  'Issi Sour': { en: 'Issi Sour', desc_en: 'Wild Turkey 101 Bourbon, lemon, sugar, San Gimignano Chianti, foamer' },
+  'Paper Plane': { en: 'Paper Plane', desc_en: 'Bulleit Bourbon, lemon, Aperol, Jefferson Amaro' },
+  'Sprissi Zero': { en: 'Sprissi Zero', desc_en: 'Martini Vibrante Bitter, pink grapefruit soda' },
+  'Il Floreale': { en: 'Il Floreale', desc_en: 'Martini Floreale Bitter, green apple juice, soda' },
+  'Il Fruttato': { en: 'Il Fruttato', desc_en: 'Orange juice, pineapple juice, grenadine' },
+  'Mojito Zero': { en: 'Mojito Zero', desc_en: 'Lime, fresh mint, sugar, ginger beer, soda' },
+};
+
+// Section title translations
+const sectionTitleTranslations = {
+  'Condividi — Light Lunch': 'To Share — Light Lunch',
+  'Primi': 'First Courses',
+  'Insalatone': 'Big Salads',
+  'Griglia': 'From the Grill',
+  'Contorni': 'Sides',
+  'Dolci': 'Desserts',
+  'Allergeni': 'Allergens',
+  'Condividi': 'To Share',
+  'Hamburger': 'Burgers',
+  'Pinse': 'Pinse',
+  'Caffè &amp; Dolci': 'Coffee & Desserts',
+  'Cocktail': 'Cocktails',
+  'Gin Tonic — Selezione del Gingegnere': 'Gin Tonic — Gingegnere Selection',
+  'Carta dei Vini': 'Wine List',
+  'Birre &amp; Bevande': 'Beers & Drinks',
+  // sub-accordion titles
+  'Bollicine': 'Sparkling',
+  'Bianchi': 'White Wines',
+  'Rossi': 'Red Wines',
+  'Rosati': 'Rosé',
+  'Vini da Dessert': 'Dessert Wines',
+  'Birre alla Spina': 'Draft Beers',
+  'Birrificio San Gimignano': 'San Gimignano Craft Brewery',
+  'Bottiglie 33cl': 'Bottles 33cl',
+  'Acqua &amp; Soft Drink': 'Water & Soft Drinks',
+  'I Premium del Poggio': 'Premium Cocktails',
+  'Analcolici': 'Non-Alcoholic',
+  'Caffetteria': 'Coffee',
+  'Whisky': 'Whisky',
+  'Rum': 'Rum',
+  'Amari': 'Digestifs',
+  'Liquori': 'Liqueurs',
+  'Grappe': 'Grappa',
+};
+
+let currentLang = 'it';
+
+function switchLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+
+  // Toggle meal buttons text
+  document.querySelectorAll('.meal-btn').forEach(btn => {
+    const meal = btn.dataset.meal;
+    const key = 'meal-' + meal;
+    if (translations[key]) btn.textContent = translations[key][lang];
+  });
+
+  // Toggle nav tab text
+  document.querySelectorAll('[data-target]').forEach(btn => {
+    const target = btn.dataset.target;
+    const key = 'nav-' + target;
+    if (translations[key]) btn.textContent = translations[key][lang];
+  });
+
+  // Toggle section titles
+  document.querySelectorAll('.section-title').forEach(el => {
+    const itText = el.dataset.it || el.innerHTML;
+    if (!el.dataset.it) el.dataset.it = el.innerHTML;
+    const enKey = sectionTitleTranslations[el.dataset.it];
+    if (enKey) el.textContent = lang === 'en' ? enKey : el.dataset.it;
+  });
+
+  // Toggle sub-accordion titles
+  document.querySelectorAll('.sub-trigger-title').forEach(el => {
+    if (!el.dataset.it) el.dataset.it = el.textContent.trim();
+    const enKey = sectionTitleTranslations[el.dataset.it];
+    if (enKey) el.textContent = lang === 'en' ? enKey : el.dataset.it;
+  });
+
+  // Toggle sub-titles (h3)
+  document.querySelectorAll('.sub-title').forEach(el => {
+    if (!el.dataset.it) el.dataset.it = el.textContent.trim();
+    const enKey = sectionTitleTranslations[el.dataset.it.replace(/^[^\w]*/, '').trim()];
+    if (enKey) el.textContent = lang === 'en' ? el.textContent.replace(el.textContent.replace(/^[^\w]*/, '').trim(), enKey) : el.dataset.it;
+  });
+
+  // Toggle dish cards
+  document.querySelectorAll('.dish-card').forEach(card => {
+    const nameEl = card.querySelector('.dish-name');
+    const descEl = card.querySelector('.dish-desc');
+    if (!nameEl) return;
+    if (!nameEl.dataset.it) nameEl.dataset.it = nameEl.textContent.trim();
+    const t = dishTranslations[nameEl.dataset.it];
+    if (t) {
+      nameEl.textContent = lang === 'en' ? t.en : nameEl.dataset.it;
+      if (descEl && t.desc_en !== undefined) {
+        if (!descEl.dataset.it) descEl.dataset.it = descEl.textContent.trim();
+        if (t.desc_en) descEl.textContent = lang === 'en' ? t.desc_en : descEl.dataset.it;
+      }
+    }
+  });
+
+  // Toggle simple-item names
+  document.querySelectorAll('.simple-item').forEach(item => {
+    const nameEl = item.querySelector('.simple-item-name');
+    if (!nameEl) return;
+    if (!nameEl.dataset.it) nameEl.dataset.it = nameEl.textContent.trim();
+    const t = dishTranslations[nameEl.dataset.it];
+    if (t) nameEl.textContent = lang === 'en' ? t.en : nameEl.dataset.it;
+  });
+
+  // Section badge for allergens panel
+  document.querySelectorAll('.allergen-item').forEach(el => {
+    const num = el.querySelector('.allergen-num').textContent;
+    const allergenMap = {
+      '1': { it: 'Cereali contenenti glutine e derivati', en: 'Cereals containing gluten and derivatives' },
+      '2': { it: 'Crostacei e prodotti derivati', en: 'Crustaceans and derivatives' },
+      '3': { it: 'Uova e prodotti a base di uova', en: 'Eggs and egg products' },
+      '4': { it: 'Pesce e prodotti derivati', en: 'Fish and fish products' },
+      '5': { it: 'Arachidi e prodotti derivati', en: 'Peanuts and derivatives' },
+      '6': { it: 'Soia e prodotti derivati', en: 'Soy and derivatives' },
+      '7': { it: 'Latte e derivati (incluso lattosio)', en: 'Milk and dairy (incl. lactose)' },
+      '8': { it: 'Frutta a guscio', en: 'Tree nuts' },
+      '9': { it: 'Sedano e prodotti derivati', en: 'Celery and derivatives' },
+      '10': { it: 'Senape e prodotti derivati', en: 'Mustard and derivatives' },
+      '11': { it: 'Semi di sesamo e derivati', en: 'Sesame seeds and derivatives' },
+      '12': { it: 'Anidride solforosa e solfiti', en: 'Sulphur dioxide and sulphites' },
+      '13': { it: 'Lupini e prodotti derivati', en: 'Lupin and derivatives' },
+      '14': { it: 'Molluschi e prodotti derivati', en: 'Molluscs and derivatives' },
+    };
+    const map = allergenMap[num];
+    if (map) {
+      const numEl = el.querySelector('.allergen-num');
+      el.textContent = '';
+      el.appendChild(numEl);
+      el.appendChild(document.createTextNode(lang === 'en' ? map.en : map.it));
+    }
+  });
+
+  // Gin section note
+  const ginNote = document.querySelector('#gin .section-note');
+  if (ginNote) {
+    ginNote.textContent = lang === 'en'
+      ? 'All gins are served with Italian artisan tonic "Dandy Classic Touch" — also available: "Dandy Zero Sugar"'
+      : 'Tutti i gin sono serviti con tonica artigianale italiana "Dandy Classic Touch" — disponibile anche "Dandy Zero Zuccheri"';
+  }
+
+  // Gin extra card
+  const ginExtra = document.querySelector('.gin-extra .gin-info .gin-profile');
+  if (ginExtra) {
+    ginExtra.textContent = lang === 'en'
+      ? 'Many more gins in constant rotation — ask and choose your perfect match!'
+      : 'Tanti altri gin in costante aggiornamento — chiedi e scegli quello che fa per te!';
+  }
+}
+
 const allSectionIds = [
   'll-condividi','ll-primi','ll-insalatone','ll-griglia','ll-contorni','ll-dolci','ll-allergeni',
   'condividi','hamburger','pinse','griglia','contorni','dolci','allergeni',
