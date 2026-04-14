@@ -955,27 +955,37 @@
       if (!isOpen) btn.classList.add("open");
     }
 
-    document.querySelectorAll(".nav-tab").forEach(tab => {
-      tab.addEventListener("click", () => {
-        const visibleGroup = tab.closest(".nav-group");
-        visibleGroup.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
+   document.querySelectorAll(".nav-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    const visibleGroup = tab.closest(".nav-group");
+    visibleGroup.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
 
-        const target = document.getElementById(tab.dataset.target);
-        if (!target) return;
+    const targetId = tab.dataset.target;
+    const target = document.getElementById(targetId);
+    if (!target) return;
 
-        const panel = target.closest(".meal-panel");
-        panel.querySelectorAll(".section").forEach(item => item.classList.remove("open"));
-        target.classList.add("open");
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    });
+    // Trova il meal-panel antenato (funziona anche se target non ha classe .section)
+    const panel = target.closest(".meal-panel");
+    if (!panel) return;
 
-    window.addEventListener("scroll", () => {
-      scrollTopBtn.classList.toggle("visible", window.scrollY > 500);
-    });
+    // Chiudi tutte le sezioni del panel
+    panel.querySelectorAll(".section").forEach(item => item.classList.remove("open"));
 
-    scrollTopBtn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+    // Apri la sezione target: se ha classe section usala, altrimenti cerca la .section che la contiene o coincide con l'id
+    const sectionEl = target.classList.contains("section")
+      ? target
+      : target.closest(".section") || panel.querySelector(`.section[id="${targetId}"]`);
+
+    if (sectionEl) {
+      sectionEl.classList.add("open");
+      setTimeout(() => {
+        const stickyNav = document.querySelector(".sticky-nav");
+        const navHeight = stickyNav ? stickyNav.offsetHeight : 0;
+        const top = sectionEl.getBoundingClientRect().top + window.scrollY - navHeight - 8;
+        window.scrollTo({ top, behavior: "smooth" });
+      }, 80);
+    }
+  });
+});
   </script></body></html>
